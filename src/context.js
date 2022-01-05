@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useCallback } from "react";
 import axios from "axios";
+import authHeader from "./services/auth-header";
 
-// const url = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=";
 const url = "https://friendbook-java.herokuapp.com/friend";
 // const url = "http://localhost:8080/friend";
 const AppContext = React.createContext();
@@ -15,9 +15,9 @@ const AppProvider = ({ children }) => {
   const fetchDrinks = useCallback(() => {
     setLoading(true);
     try {
-      axios.get(`${url}`).then((response) => {
+      axios.get(`${url}`, { headers: authHeader() }).then((response) => {
         const data = response.data;
-        console.log(data);
+
         if (data) {
           const newCocktails = data.map((item) => {
             const { id, link, name, place, phoneNumber } = item;
@@ -40,10 +40,12 @@ const AppProvider = ({ children }) => {
       console.log(error);
       setLoading(false);
     }
+    setLoading(false);
   }, [searchTerm]);
   useEffect(() => {
     fetchDrinks();
   }, [searchTerm, fetchDrinks]);
+
   return (
     <AppContext.Provider
       value={{ loading, cocktails, searchTerm, setSearchTerm }}

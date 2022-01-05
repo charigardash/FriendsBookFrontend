@@ -1,1 +1,1 @@
-# https://friendbook-java.herokuapp.com/
+# https://myfriendsbook.netlify.app/

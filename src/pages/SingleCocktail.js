@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Loading from "../components/Loading";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import authHeader from "../services/auth-header";
 
 export default function SingleCocktail() {
   const { id } = useParams();
@@ -13,8 +14,10 @@ export default function SingleCocktail() {
     async function getCocktail() {
       try {
         axios
-          .get(`https://friendbook-java.herokuapp.com/friend/${id}`)
-          // .get(`http://localhost:8080/friend/${id}`)
+          .get(`https://friendbook-java.herokuapp.com/friend/${id}`, {
+            headers: authHeader(),
+          })
+          // .get(`http://localhost:8080/friend/${id}`, { headers: authHeader() })
           .then((response) => {
             const data = response.data;
             console.log(data);
@@ -23,8 +26,8 @@ export default function SingleCocktail() {
             } else {
               setCocktail(null);
             }
+            setLoading(false);
           });
-        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -33,9 +36,8 @@ export default function SingleCocktail() {
   }, [id]);
   if (loading) {
     return <Loading />;
-  }
-  if (!cocktail) {
-    return <h2 className="section-title">no cocktail to display</h2>;
+  } else if (!cocktail) {
+    return <h2 className="section-title">no friend to display</h2>;
   } else {
     // const { name, image, category, info, glass, instructions, ingredients } =
     //   cocktail;

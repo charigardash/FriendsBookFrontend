@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import authHeader from "../services/auth-header";
 
 const url = "https://friendbook-java.herokuapp.com/friend";
 // const url = "http://localhost:8080/friend";
@@ -32,19 +33,23 @@ function Save() {
     ) {
       const newPerson = { ...person };
       setPeople([...people, newPerson]);
-      axios.post(url, person);
-      navigate("/");
-      setPerson({
-        name: "",
-        phoneNumber: "",
-        dob: "",
-        address: "",
-        link: "",
-        info: "",
+      axios.post(url, person, { headers: authHeader() }).then((response) => {
+        navigate("/");
+        window.location.reload();
       });
+      // setPerson({
+      //   name: "",
+      //   phoneNumber: "",
+      //   dob: "",
+      //   address: "",
+      //   link: "",
+      //   info: "",
+      // });
+      // navigate("/");
+      // window.location.href = window.location.href;
+      // window.location.reload();
     }
   };
-  //link, name, phoneNumber, dob, address, info
   return (
     <>
       <article className="form">
@@ -79,6 +84,7 @@ function Save() {
               onChange={handleChange}
             />
           </div>
+
           <div className="form-control">
             <label htmlFor="address">Address : </label>
             <input
@@ -117,7 +123,7 @@ function Save() {
             className="btn btn-primary btn-details"
             onClick={handleSubmit}
           >
-            add person
+            Add Person
           </button>
         </form>
       </article>
